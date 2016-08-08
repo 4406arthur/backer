@@ -1,19 +1,48 @@
- <div class="container">
+ <div class="container-fluid ">
   <!-- Content here -->
-  <div class="jumbotron">
-    <h1 class="display-3" >Projects</h1>
+  <div class="jumbotron jumbotron-fluid">
+    <h1 class="display-3 " >Backer</h1>
+      <p class="lead"> The showcase of pupular backs on KickStarter </p>
   </div>
   <div id="projects">
-    <input type="text" name="query_name" v-model="query_name" v-on:keyup="search" debounce:800>
-
-    <div class="card-columns">
-        <div class="card" v-for="project in projects">
-            <img src="{{ project.photo_uri }}" class="card-img-top img-fluid">
-            <div class="card-block">
-                <h4 class="card-title">{{ project.name }}</h4>
-
+    <div class ="row">
+      <div class="col-lg-6 offset-md-3">
+        <div class="input-group">
+          <input type="text" class="form-control" name="query_name" v-model="query_name" v-on:keyup="search" debounce:800 aria-label="Text input with dropdown button">
+            <div class="input-group-btn">
+              <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Catelog
+              </button>
+              <div class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" v-on:click="categoryFilter('Art')" >Art</a>
+                <a class="dropdown-item" v-on:click="categoryFilter('Anthologies')">Anthologies</a>
+                <a class="dropdown-item" v-on:click="categoryFilter('Performances')">Performances</a>
+                <a class="dropdown-item" v-on:click="categoryFilter('Architecture')">Architecture</a>
+                <a class="dropdown-item" v-on:click="categoryFilter('Accessories')">Accessories</a>
+              </div>
             </div>
         </div>
+      </div>
+    </div>
+
+    <br><br>
+
+      <div class="card" v-for="project in projects">
+        <div class="row">
+          <div class="col-md-6 offset-md-4">
+            <img v-bind:src="project.photo_uri" class="card-img-top img-fluid">
+            <div class="card-block">
+                <h4 class="card-title">{{ project.name }}</h4>
+                <p class="card-text">{{ project.blurb}}</p>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">STATE  {{ project.state}}</li>
+                    <li class="list-group-item">BACKERS {{ project.backers_count}}</li>
+                    <li class="list-group-item">PROGRESS</li>
+                </ul>
+                <!-- <progress class="progress progress-striped progress-info" value="{{project.pledged}}" max="{{project.goal}}"></progress> -->
+            </div>
+          </div>
+       </div>
     </div>
   </div>
 </div>
@@ -24,13 +53,21 @@
         el: '#projects',
         data: {
           projects: [],
-          query_name: null
+          query_name: null,
+          query_category: null
         },
         methods: {
             search: function (e) {
                 this.fetchProjects({
                     name: this.query_name
                 })
+            },
+            categoryFilter: function (msg) {
+                console.log(msg)
+                this.fetchProjects({
+                    category: msg
+                })
+
             },
             fetchProjects: function (options) {
                 var callback = $.proxy(function (rep) {
