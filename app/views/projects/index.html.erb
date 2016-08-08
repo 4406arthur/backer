@@ -1,0 +1,51 @@
+ <div class="container">
+  <!-- Content here -->
+  <div class="jumbotron">
+    <h1 class="display-3" >Projects</h1>
+  </div>
+  <div id="projects">
+    <input type="text" name="query_name" v-model="query_name" v-on:keyup="search" debounce:800>
+
+    <div class="card-columns">
+        <div class="card" v-for="project in projects">
+            <img src="{{ project.photo_uri }}" class="card-img-top img-fluid">
+            <div class="card-block">
+                <h4 class="card-title">{{ project.name }}</h4>
+
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<%= content_for :scripts do %>
+  <script type="text/javascript">
+    new Vue({
+        el: '#projects',
+        data: {
+          projects: [],
+          query_name: null
+        },
+        methods: {
+            search: function (e) {
+                this.fetchProjects({
+                    name: this.query_name
+                })
+            },
+            fetchProjects: function (options) {
+                var callback = $.proxy(function (rep) {
+                    this.projects = rep
+                }, this);
+
+                $.get('/projects.json', options).then(callback);
+            }
+        },
+
+        ready: function() {
+            this.fetchProjects();
+        }
+    });
+  </script>
+<% end %>
+
+

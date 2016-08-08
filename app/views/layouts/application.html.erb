@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Backer</title>
+    <%= csrf_meta_tags %>
+    <%= stylesheet_link_tag 'application' %>
+
+  </head>
+
+  <body>
+    <%= yield %>
+    <%= javascript_include_tag 'application' %>
+    <%= yield :scripts %>
+  </body>
+</html>
